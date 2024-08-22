@@ -1,3 +1,125 @@
+resource "proxmox_vm_qemu" "cloudinit-Cockpit-Management-server" {
+    # Node name has to be the same name as within the cluster
+    # this might not include the FQDN
+    target_node = "prx1"
+    desc = "Cloudinit Ubuntu"
+    count = 1
+    onboot = true
+
+    # The template name to clone this vm from
+    clone = "ubn-noble-terra"
+
+    # Activate QEMU agent for this VM
+    agent = 0
+
+    os_type = "cloud-init"
+    cores = 8
+    sockets = 1
+    numa = false
+    vcpus = 0
+    cpu = "host"
+    memory = 8192
+    name = "Cockpit"
+
+    # cloudinit_cdrom_storage = "local-lvm"
+    scsihw   = "virtio-scsi-single"
+    bootdisk = "scsi0"
+
+    disks {
+        ide {
+            ide2 {
+                cloudinit {
+                    storage = "local-lvm"
+                }
+            }
+        }
+        scsi {
+            scsi0 {
+                disk {
+                    storage = "Fast500G"
+                    size = 12
+                }
+            }
+        }
+    }
+
+    network {
+        model = "virtio"
+        bridge = "vmbr0"
+    }
+
+    # Setup the ip address using cloud-init.
+    # Keep in mind to use the CIDR notation for the ip.
+    # ipconfig0 = "ip=10.0.1.80${count.index + 1}/24,gw=10.0.1.1"
+    ipconfig0 = "ip=192.168.1.32/24,gw=192.168.1.1"
+    ciuser = "nhat"
+    # nameserver = "192.168.200.11"
+    sshkeys = <<EOF
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDF/hVW9QqlMV//ke+RmIFPAv9t144HDE2ygv6vOZJel7GMAfTzwb+iMNW+L92Fph3Ra4dHTIf0c0ToJDCe8PLSDbQtgNr4G/PVXPqdJYQMbULrsY8Nbktl7rkQYotoh8a4wL5yH0Ygvgws3dIJmyEZwDDAaL3sgjFtyD7sKg8etQWTlZfSaLSI/mD7QlzAXLj3LmqpVI3q/3WkhDZhxv096hwtTppuxsy9+xY0XjbP8EUkLUFyIMUEZFRwU+DD2cnFyjAXw0erSPFbP0asVwK6pboYjDwlYTVNq5lLqCAAJFiBajWvJm2EGF5v9U8Qp9/MQLs/cotfOPKvLPy/uPa/NrKTmRAPEEbRbQWdMIUJsj2t0jIz2Xd9FN/ChmnGpsFNSjmVgI6GR4ql/JhiRjTFiIqq6rPceq+MROjmFXQnmDiSyBLamWMf3VojWRHyqYEIl1ZRP4PZU4KI7vCGXt2BZtLYR2CEaP/xj1KwQD5jwjbzzQ10HIkoghCtovlm1730ERrE3AOWaQpgpfk0OI23o0nUUmP+KNjhmNdczelxfK6f+EMrwhJ1MaImjUG93qqfGmvOE0ant6CtAMd59yidBiTHJ6HrNOVWKfG+zy203lWxtuee/svQgzAcpGvz1ZiQHMYWaz4Oms36GmlL36SbPk4bdpt4aTezdSp/Bi0nuQ== katana
+    EOF
+}
+
+resource "proxmox_vm_qemu" "cloudinit-Portainer-Management-server" {
+    # Node name has to be the same name as within the cluster
+    # this might not include the FQDN
+    target_node = "prx1"
+    desc = "Cloudinit Ubuntu"
+    count = 1
+    onboot = true
+
+    # The template name to clone this vm from
+    clone = "ubn-noble-terra"
+
+    # Activate QEMU agent for this VM
+    agent = 0
+
+    os_type = "cloud-init"
+    cores = 8
+    sockets = 1
+    numa = false
+    vcpus = 0
+    cpu = "host"
+    memory = 8192
+    name = "Portainer"
+
+    # cloudinit_cdrom_storage = "local-lvm"
+    scsihw   = "virtio-scsi-single"
+    bootdisk = "scsi0"
+
+    disks {
+        ide {
+            ide2 {
+                cloudinit {
+                    storage = "local-lvm"
+                }
+            }
+        }
+        scsi {
+            scsi0 {
+                disk {
+                    storage = "Fast500G"
+                    size = 15
+                }
+            }
+        }
+    }
+
+    network {
+        model = "virtio"
+        bridge = "vmbr0"
+    }
+
+    # Setup the ip address using cloud-init.
+    # Keep in mind to use the CIDR notation for the ip.
+    # ipconfig0 = "ip=10.0.1.80${count.index + 1}/24,gw=10.0.1.1"
+    ipconfig0 = "ip=192.168.1.35/24,gw=192.168.1.1"
+    ciuser = "nhat"
+    # nameserver = "192.168.200.11"
+    sshkeys = <<EOF
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDF/hVW9QqlMV//ke+RmIFPAv9t144HDE2ygv6vOZJel7GMAfTzwb+iMNW+L92Fph3Ra4dHTIf0c0ToJDCe8PLSDbQtgNr4G/PVXPqdJYQMbULrsY8Nbktl7rkQYotoh8a4wL5yH0Ygvgws3dIJmyEZwDDAaL3sgjFtyD7sKg8etQWTlZfSaLSI/mD7QlzAXLj3LmqpVI3q/3WkhDZhxv096hwtTppuxsy9+xY0XjbP8EUkLUFyIMUEZFRwU+DD2cnFyjAXw0erSPFbP0asVwK6pboYjDwlYTVNq5lLqCAAJFiBajWvJm2EGF5v9U8Qp9/MQLs/cotfOPKvLPy/uPa/NrKTmRAPEEbRbQWdMIUJsj2t0jIz2Xd9FN/ChmnGpsFNSjmVgI6GR4ql/JhiRjTFiIqq6rPceq+MROjmFXQnmDiSyBLamWMf3VojWRHyqYEIl1ZRP4PZU4KI7vCGXt2BZtLYR2CEaP/xj1KwQD5jwjbzzQ10HIkoghCtovlm1730ERrE3AOWaQpgpfk0OI23o0nUUmP+KNjhmNdczelxfK6f+EMrwhJ1MaImjUG93qqfGmvOE0ant6CtAMd59yidBiTHJ6HrNOVWKfG+zy203lWxtuee/svQgzAcpGvz1ZiQHMYWaz4Oms36GmlL36SbPk4bdpt4aTezdSp/Bi0nuQ== katana
+    EOF
+}
+
 resource "proxmox_vm_qemu" "cloudinit-Media-server" {
     # Node name has to be the same name as within the cluster
     # this might not include the FQDN
@@ -59,7 +181,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDF/hVW9QqlMV//ke+RmIFPAv9t144HDE2ygv6vOZJe
     EOF
 }
 
-resource "proxmox_vm_qemu" "cloudinit-Jenkins-server" {
+resource "proxmox_vm_qemu" "cloudinit-Jenkins-Development-server" {
     # Node name has to be the same name as within the cluster
     # this might not include the FQDN
     target_node = "prx1"
@@ -120,7 +242,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDF/hVW9QqlMV//ke+RmIFPAv9t144HDE2ygv6vOZJe
     EOF
 }
 
-resource "proxmox_vm_qemu" "cloudinit-Gitlabs-server" {
+resource "proxmox_vm_qemu" "cloudinit-Gitlab-Development-server" {
     # Node name has to be the same name as within the cluster
     # this might not include the FQDN
     target_node = "prx1"
@@ -181,7 +303,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDF/hVW9QqlMV//ke+RmIFPAv9t144HDE2ygv6vOZJe
     EOF
 }
 
-resource "proxmox_vm_qemu" "cloudinit-K8s-Master" {
+resource "proxmox_vm_qemu" "cloudinit-K8s-Master-Development-Server" {
     # Node name has to be the same name as within the cluster
     # this might not include the FQDN
     target_node = "prx1"
@@ -242,7 +364,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDF/hVW9QqlMV//ke+RmIFPAv9t144HDE2ygv6vOZJe
     EOF
 }
 
-resource "proxmox_vm_qemu" "cloudinit-K8s-Worker" {
+resource "proxmox_vm_qemu" "cloudinit-K8s-Worker-Development-Server" {
     # Node name has to be the same name as within the cluster
     # this might not include the FQDN
     target_node = "prx1"
@@ -342,7 +464,7 @@ resource "proxmox_vm_qemu" "cloudinit-Monitoring-server" {
             scsi0 {
                 disk {
                     storage = "Fast500G"
-                    size = 25
+                    size = 30
                 }
             }
         }
@@ -364,7 +486,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDF/hVW9QqlMV//ke+RmIFPAv9t144HDE2ygv6vOZJe
     EOF
 }
 
-resource "proxmox_vm_qemu" "cloudinit-MySQL-Database-server" {
+resource "proxmox_vm_qemu" "cloudinit-Security-server" {
     # Node name has to be the same name as within the cluster
     # this might not include the FQDN
     target_node = "prx1"
@@ -379,13 +501,13 @@ resource "proxmox_vm_qemu" "cloudinit-MySQL-Database-server" {
     agent = 0
 
     os_type = "cloud-init"
-    cores = 2
+    cores = 8
     sockets = 1
     numa = false
     vcpus = 0
     cpu = "host"
     memory = 8192
-    name = "MySQL"
+    name = "Security"
 
     # cloudinit_cdrom_storage = "local-lvm"
     scsihw   = "virtio-scsi-single"
@@ -417,6 +539,67 @@ resource "proxmox_vm_qemu" "cloudinit-MySQL-Database-server" {
     # Setup the ip address using cloud-init.
     # Keep in mind to use the CIDR notation for the ip.
     # ipconfig0 = "ip=10.0.1.80${count.index + 1}/24,gw=10.0.1.1"
+    ipconfig0 = "ip=192.168.1.70/24,gw=192.168.1.1"
+    ciuser = "nhat"
+    # nameserver = "192.168.200.11"
+    sshkeys = <<EOF
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDF/hVW9QqlMV//ke+RmIFPAv9t144HDE2ygv6vOZJel7GMAfTzwb+iMNW+L92Fph3Ra4dHTIf0c0ToJDCe8PLSDbQtgNr4G/PVXPqdJYQMbULrsY8Nbktl7rkQYotoh8a4wL5yH0Ygvgws3dIJmyEZwDDAaL3sgjFtyD7sKg8etQWTlZfSaLSI/mD7QlzAXLj3LmqpVI3q/3WkhDZhxv096hwtTppuxsy9+xY0XjbP8EUkLUFyIMUEZFRwU+DD2cnFyjAXw0erSPFbP0asVwK6pboYjDwlYTVNq5lLqCAAJFiBajWvJm2EGF5v9U8Qp9/MQLs/cotfOPKvLPy/uPa/NrKTmRAPEEbRbQWdMIUJsj2t0jIz2Xd9FN/ChmnGpsFNSjmVgI6GR4ql/JhiRjTFiIqq6rPceq+MROjmFXQnmDiSyBLamWMf3VojWRHyqYEIl1ZRP4PZU4KI7vCGXt2BZtLYR2CEaP/xj1KwQD5jwjbzzQ10HIkoghCtovlm1730ERrE3AOWaQpgpfk0OI23o0nUUmP+KNjhmNdczelxfK6f+EMrwhJ1MaImjUG93qqfGmvOE0ant6CtAMd59yidBiTHJ6HrNOVWKfG+zy203lWxtuee/svQgzAcpGvz1ZiQHMYWaz4Oms36GmlL36SbPk4bdpt4aTezdSp/Bi0nuQ== katana
+    EOF
+}
+
+resource "proxmox_vm_qemu" "cloudinit-MySQL-Database-server" {
+    # Node name has to be the same name as within the cluster
+    # this might not include the FQDN
+    target_node = "prx1"
+    desc = "Cloudinit Ubuntu"
+    count = 1
+    onboot = true
+
+    # The template name to clone this vm from
+    clone = "ubn-noble-terra"
+
+    # Activate QEMU agent for this VM
+    agent = 0
+
+    os_type = "cloud-init"
+    cores = 8
+    sockets = 1
+    numa = false
+    vcpus = 0
+    cpu = "host"
+    memory = 8192
+    name = "MySQL"
+
+    # cloudinit_cdrom_storage = "local-lvm"
+    scsihw   = "virtio-scsi-single"
+    bootdisk = "scsi0"
+
+    disks {
+        ide {
+            ide2 {
+                cloudinit {
+                    storage = "local-lvm"
+                }
+            }
+        }
+        scsi {
+            scsi0 {
+                disk {
+                    storage = "Fast500G"
+                    size = 32
+                }
+            }
+        }
+    }
+
+    network {
+        model = "virtio"
+        bridge = "vmbr0"
+    }
+
+    # Setup the ip address using cloud-init.
+    # Keep in mind to use the CIDR notation for the ip.
+    # ipconfig0 = "ip=10.0.1.80${count.index + 1}/24,gw=10.0.1.1"
     ipconfig0 = "ip=192.168.1.80/24,gw=192.168.1.1"
     ciuser = "nhat"
     # nameserver = "192.168.200.11"
@@ -425,7 +608,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDF/hVW9QqlMV//ke+RmIFPAv9t144HDE2ygv6vOZJe
     EOF
 }
 
-resource "proxmox_vm_qemu" "cloudinit-Reverse_Proxy-Networking-server" {
+resource "proxmox_vm_qemu" "cloudinit-NginxProxyManager-Networking-server" {
     # Node name has to be the same name as within the cluster
     # this might not include the FQDN
     target_node = "prx1"
@@ -525,7 +708,7 @@ resource "proxmox_vm_qemu" "cloudinit-Pi_Hole-Networking-server" {
             scsi0 {
                 disk {
                     storage = "Fast500G"
-                    size = 14
+                    size = 12
                 }
             }
         }
