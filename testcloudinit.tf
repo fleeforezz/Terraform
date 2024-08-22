@@ -19,7 +19,7 @@ resource "proxmox_vm_qemu" "cloudinit-monitoring-server" {
     vcpus = 0
     cpu = "host"
     memory = 4096
-    name = "k3s-master-0${count.index + 1}"
+    name = "Monitoring"
 
     # cloudinit_cdrom_storage = "local-lvm"
     scsihw   = "virtio-scsi-single"
@@ -27,31 +27,31 @@ resource "proxmox_vm_qemu" "cloudinit-monitoring-server" {
 
     disks {
         ide {
-            ide3 {
+            ide2 {
                 cloudinit {
-                    storage = "local-lvm"
+                    storage = "Fast500G"
                 }
             }
         }
-        # scsi {
-        #     scsi0 {
-        #         disk {
-        #           storage = "Extra500G"
-        #           size = 12
-        #         }
-        #     }
-        # }
+        scsi {
+            scsi0 {
+                disk {
+                    storage = "Fast500G"
+                    size = 20
+                }
+            }
+        }
     }
 
     network {
         model = "virtio"
-        bridge = "vmbr2"
+        bridge = "vmbr0"
     }
 
     # Setup the ip address using cloud-init.
     # Keep in mind to use the CIDR notation for the ip.
     # ipconfig0 = "ip=10.0.1.80${count.index + 1}/24,gw=10.0.1.1"
-    ipconfig0 = "ip=10.0.1.81/24,gw=10.0.1.1"
+    ipconfig0 = "ip=192.168.1.60/24,gw=192.168.1.1"
     ciuser = "nhat"
     # nameserver = "192.168.200.11"
     sshkeys = <<EOF
@@ -59,7 +59,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCffHb2rxXW8kTY6CLSdPN9h5jsKdVDHesbeoCARCPG
     EOF
 }
 
-resource "proxmox_vm_qemu" "cloudinit-CI-server" {
+resource "proxmox_vm_qemu" "cloudinit-Jenkins-server" {
     # Node name has to be the same name as within the cluster
     # this might not include the FQDN
     target_node = "prx1"
@@ -80,7 +80,7 @@ resource "proxmox_vm_qemu" "cloudinit-CI-server" {
     vcpus = 0
     cpu = "host"
     memory = 4096
-    name = "k3s-worker-0${count.index + 1}"
+    name = "Jenkins"
 
     # cloudinit_cdrom_storage = "local-lvm"
     scsihw   = "virtio-scsi-single" 
