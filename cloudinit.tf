@@ -1,13 +1,13 @@
 # Load environment variables
-locals {
-  env_vars = yamldecode(file(".env"))
+# Load environment variables using terraform-dotenv
+data "external" "env" {
+  program = ["bash", "-c", "cat .env | yq -o=json"]
 }
 
 # Define SSH keys variable
 variable "ssh_keys" {
   type        = string
   sensitive   = true
-  default     = local.env_vars.SSH_KEYS
 }
 
 resource "proxmox_vm_qemu" "cloudinit-Kubernetes-Master-1" {
@@ -66,5 +66,5 @@ resource "proxmox_vm_qemu" "cloudinit-Kubernetes-Master-1" {
     ipconfig0 = "ip=10.0.1.53/24,gw=10.0.1.1"
     ciuser = "nhat"
     # nameserver = "10.0.200.11"
-    sshkeys = var.ssh_keys
+    sshkeys = data.external.env.result.SSH_KEYS
 }
