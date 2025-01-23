@@ -44,6 +44,7 @@ resource "proxmox_vm_qemu" "cloudinit-Kubernetes-Master-1" {
     }
 
     network {
+        id = 0
         model = "virtio"
         bridge = "vmbr2"
     }
@@ -79,7 +80,7 @@ resource "proxmox_vm_qemu" "cloudinit-Kubernetes-Worker-1" {
     count           = 1
 
     # Cloud-Init configuration
-    nameserser      = "1.1.1.1 8.8.8.8"
+    nameserver      = "1.1.1.1 8.8.8.8"
     ipconfig0       = "ip=10.0.1.54/24,gw=10.0.1.1,ip6=dhcp"
     skip_ipv6       = true
     sshkeys = <<EOF
@@ -111,6 +112,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDNlOzyhLmxvu5ROcO2Il00SyRHZH5PDu3U/ktN6Ses
     }
 
     network {
+        id          = 0
         bridge      = "vmbr2"
         model       = "virtio"
     }
