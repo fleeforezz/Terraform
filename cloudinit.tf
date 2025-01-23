@@ -18,7 +18,7 @@ resource "proxmox_vm_qemu" "cloudinit-Kubernetes-Master-1" {
     vcpus = 0
     cpu = "host"
     memory = 8192
-    name = "K8s-Master-1"
+    name = "k8s-master-1.local"
     vmid = 117
 
     # cloudinit_cdrom_storage = "local-lvm"
