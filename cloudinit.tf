@@ -52,7 +52,7 @@ resource "proxmox_vm_qemu" "cloudinit-Kubernetes-Master-1" {
     # Setup the ip address using cloud-init.
     # Keep in mind to use the CIDR notation for the ip.
     # ipconfig0 = "ip=10.0.1.80${count.index + 1}/24,gw=10.0.1.1"
-    ipconfig0       = "ip=10.0.1.53/24,gw=10.0.1.1"
+    ipconfig0       = "ip=10.0.1.55/24,gw=10.0.1.1"
     ciuser          = "nhat"
     nameserver      = "1.1.1.1"
     sshkeys = <<EOF
@@ -115,7 +115,7 @@ resource "proxmox_vm_qemu" "cloudinit-Kubernetes-Worker-1" {
     # Setup the ip address using cloud-init.
     # Keep in mind to use the CIDR notation for the ip.
     # ipconfig0 = "ip=10.0.1.80${count.index + 1}/24,gw=10.0.1.1"
-    ipconfig0       = "ip=10.0.1.54/24,gw=10.0.1.1"
+    ipconfig0       = "ip=10.0.1.56/24,gw=10.0.1.1"
     ciuser          = "nhat"
     nameserver      = "1.1.1.1"
     sshkeys = <<EOF
