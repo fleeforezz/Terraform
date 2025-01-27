@@ -16,7 +16,7 @@ resource "proxmox_vm_qemu" "cloudinit-Kubernetes-Master-1" {
     sockets         = 1
     numa            = false
     vcpus           = 0
-    cpu             = "host"
+    cpu_type        = "host"
     memory          = 8192
     name            = "k8s-master-1.local"
     vmid            = 117
@@ -79,7 +79,7 @@ resource "proxmox_vm_qemu" "cloudinit-Kubernetes-Worker-1" {
     sockets         = 1
     numa            = false
     vcpus           = 0
-    cpu             = "host"
+    cpu_type        = "host"
     memory          = 8192
     name            = "k8s-worker-1.local"
     vmid            = 118
@@ -110,12 +110,12 @@ resource "proxmox_vm_qemu" "cloudinit-Kubernetes-Worker-1" {
         id          = 0
         model       = "virtio"
         bridge      = "vmbr2"
+        ipconfig0   = "ip=10.0.1.55/24,gw=10.0.1.1"
     }
 
     # Setup the ip address using cloud-init.
     # Keep in mind to use the CIDR notation for the ip.
     # ipconfig0 = "ip=10.0.1.80${count.index + 1}/24,gw=10.0.1.1"
-    ipconfig0       = "ip=10.0.1.56/24,gw=10.0.1.1"
     ciuser          = "nhat"
     nameserver      = "1.1.1.1"
     sshkeys = <<EOF
