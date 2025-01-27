@@ -88,22 +88,15 @@ resource "proxmox_vm_qemu" "cloudinit-Kubernetes-Worker-1" {
     scsihw          = "virtio-scsi-single"
     bootdisk        = "scsi0"
 
-    disks {
-        ide {
-            ide2 {
-                cloudinit {
-                    storage = "local-lvm"
-                }
-            }
-        }
-        scsi {
-            scsi0 {
-                disk {
-                    storage = "Fast500G"
-                    size = 50
-                }
-            }
-        }
+    disk {
+        type        = "scsi"
+        storage     = "Fast500G"
+        size        = 50
+    }
+
+    ide {
+        type        = "cloud-init"
+        storage     = "local-lvm"
     }
 
     network {
